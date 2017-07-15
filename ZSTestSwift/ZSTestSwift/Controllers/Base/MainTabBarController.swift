@@ -14,7 +14,7 @@ class MainTabBarController: UITabBarController, MainTabBarDelegate{
     var mainTabBarView: MainTabBarView! //自定义的底部TabbarView
     
     //MARK: - Life Cycle
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?){
         //1.调用父类的初始化方法
         super.init(nibName: nil, bundle: nil)
         //2.读取Plist文件,初始化标签栏配置数组
@@ -25,7 +25,7 @@ class MainTabBarController: UITabBarController, MainTabBarDelegate{
         self.createMainTabBarView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder){
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -33,7 +33,7 @@ class MainTabBarController: UITabBarController, MainTabBarDelegate{
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(animated)
     }
     
@@ -50,11 +50,11 @@ class MainTabBarController: UITabBarController, MainTabBarDelegate{
     
     //创建视图控制器
     private func createControllers(){
-        //初始化视图控制器类名数组
-        var controllerNameArray = [String]()
+        var controllerNameArray = [String]() //控制器类名数组
+        var controllerTitle = [String]()     //控制器Title数组
         for dictionary in self.tarbarConfigArr{
-            let className:String = dictionary["ClassName"]!
-            controllerNameArray.append(className);
+            controllerNameArray.append(dictionary["ClassName"]!);
+            controllerTitle.append(dictionary["Title"]!)
             
         guard controllerNameArray.count > 0 else{
             print("error:控制器数组为空")
@@ -64,18 +64,19 @@ class MainTabBarController: UITabBarController, MainTabBarDelegate{
         var nvcArray = [BaseNavigationViewController]()
         //在Swift中, 通过字符串创建一个类, 那么必须加上命名空间clsName
         let clsName = Bundle.main.infoDictionary!["CFBundleExecutable"] as! String
-        for vcName in controllerNameArray {
+        for i in 0...controllerNameArray.count-1 {
             //动态获取的命名空间是不包含.的, 所以需要我们自己手动拼接
-            let anyClass: AnyClass? = NSClassFromString(clsName + "." + vcName)
+            let anyClass: AnyClass? = NSClassFromString(clsName + "." + controllerNameArray[i])
             //将AnyClass类型转换为BaseViewController类型，
             //因为Swift中通过一个Class来创建一个对象, 必须告诉系统这个Class的确切类型
             if let vcClassType = anyClass as? BaseViewController.Type {
                 let viewcontroller = vcClassType.init()
+                viewcontroller.title = controllerTitle[i]
                 let nav = BaseNavigationViewController(rootViewController:viewcontroller)
                 nvcArray.append(nav)
             }
         }
-        //设置标签栏数组
+        //设置标签栏控制器数组
         self.viewControllers = nvcArray
         }
     }

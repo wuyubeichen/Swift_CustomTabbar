@@ -12,7 +12,9 @@ class MainViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        //作为导航控制器的的根视图控制器不需要父类中的返回按钮
+        self.navigationItem.leftBarButtonItem = nil;
+        self.view.backgroundColor = UIColor.orange
         // Do any additional setup after loading the view.
     }
 

@@ -12,7 +12,8 @@ class MineViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationItem.leftBarButtonItem = nil;
+        self.view.backgroundColor = UIColor.gray
         // Do any additional setup after loading the view.
     }
 
